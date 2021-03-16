@@ -1,0 +1,15 @@
+@import '_variables.scss';
+
+html {
+
+    font-size: 15px;
+    
+}
+
+body {
+    
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    font-family: 'Raleway', sans-serif;
+
+}
