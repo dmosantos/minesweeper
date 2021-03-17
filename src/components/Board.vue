@@ -1,9 +1,9 @@
 <template>
     <div>
         
-        <div :class="$style.board">
+        <div v-if="!loading" :class="$style.board">
 
-            <b-container :class="$style.panel">
+            <b-container :class="$style.panel" fluid>
                 <b-row>
 
                     <b-col :class="$style.flags">
@@ -24,6 +24,10 @@
 
             </div>
 
+        </div>
+
+        <div v-if="loading" :class="$style.loading">
+            Carregando...
         </div>
 
         <GameOver v-if="gameOver" @click="newGame()">
@@ -68,6 +72,7 @@ export default {
     data() {
         return {
 
+            loading: true,
             fieldMap: [],
             successCount: 0,
             gameOver: false,
@@ -89,9 +94,10 @@ export default {
 
     methods: {
 
-        reveal(data) {
+        reveal(cell) {
 
-            let cell = this.fieldMap[data.y][data.x];
+            if(cell.revealed)
+                return;
 
             cell.revealed = true;
 
@@ -143,7 +149,7 @@ export default {
                             && this.fieldMap[cell.y + y][cell.x + x].neighborhoodBombsCount == 0
                         )
                     )
-                        EventBus.$emit('reveal', this.fieldMap[cell.y + y][cell.x + x]);
+                        setTimeout(() => EventBus.$emit('reveal', this.fieldMap[cell.y + y][cell.x + x]), 100);
 
                 }
                 
@@ -155,6 +161,7 @@ export default {
 
             /* Reset de variáveis */
 
+            this.loading = true;
             this.fieldMap = [];
             this.successCount = 0;
             this.gameOver = false;
@@ -163,81 +170,89 @@ export default {
 
             /* Monta o mapa */
 
-            for (let y = 0; y < this.rows; y++) {
-                
-                this.fieldMap.push([]);
+            setTimeout(() => {
 
-                for (let x = 0; x < this.cols; x++) {
-
-                    this.fieldMap[y].push({
-                        x: x,
-                        y: y,
-                        revealed: false,
-                        neighborhoodBombsCount: 0,
-                        bomb: false
-                    });
-
-                }
-
-            }
-
-            /* Gera as bombas aleatórias */
-
-            let bombsMap = [];
-            let newBomb;
-
-            for(let i = 0; i < this.bombs; i++) {
-
-                for (;;) {
+                for (let y = 0; y < this.rows; y++) {
                     
-                    newBomb = {
-                        x: Math.floor(Math.random() * this.cols),
-                        y: Math.floor(Math.random() * this.rows)
-                    }
+                    this.fieldMap.push([]);
 
-                    if(bombsMap.filter(e => e.x == newBomb.x && e.y == newBomb.y).length == 0) {
-                        
-                        bombsMap.push(newBomb);
-                        break;
+                    for (let x = 0; x < this.cols; x++) {
+
+                        this.fieldMap[y].push({
+                            x: x,
+                            y: y,
+                            revealed: false,
+                            neighborhoodBombsCount: 0,
+                            bomb: false
+                        });
 
                     }
 
                 }
 
-            }
+                /* Gera as bombas aleatórias */
 
-            for(let bomb of bombsMap)
-                this.fieldMap[bomb.y][bomb.x].bomb = true;
+                let bombsMap = [];
+                let newBomb;
 
-            /* Conta a quantidade de bombas nos vizinhos */
+                for(let i = 0; i < this.bombs; i++) {
 
-            for (let row of this.fieldMap) {
-                
-                for (let cell of row) {
+                    for (;;) {
+                        
+                        newBomb = {
+                            x: Math.floor(Math.random() * this.cols),
+                            y: Math.floor(Math.random() * this.rows)
+                        }
 
-                    for(let y = -1; y < 2; y++) {
+                        if(bombsMap.filter(e => e.x == newBomb.x && e.y == newBomb.y).length == 0) {
+                            
+                            bombsMap.push(newBomb);
 
-                        for(let x = -1; x < 2; x++) {
+                            this.fieldMap[newBomb.y][newBomb.x].bomb = true;
 
-                            if (
-                                (x == 0 && y == 0)
-                                || (cell.y + y < 0 || cell.x + x < 0)
-                                || (cell.x + x >= this.cols || cell.y + y >= this.rows)
-                            )
-                                continue;
-
-                            if(this.fieldMap[cell.y + y][cell.x + x].bomb)
-                                cell.neighborhoodBombsCount++;
+                            break;
 
                         }
-                        
+
                     }
 
                 }
 
-            }
+                /* Conta a quantidade de bombas nos vizinhos */
 
-            EventBus.$emit('newGame');
+                for (let row of this.fieldMap) {
+                    
+                    for (let cell of row) {
+
+                        for(let y = -1; y < 2; y++) {
+
+                            for(let x = -1; x < 2; x++) {
+
+                                if (
+                                    (x == 0 && y == 0)
+                                    || (cell.y + y < 0 || cell.x + x < 0)
+                                    || (cell.x + x >= this.cols || cell.y + y >= this.rows)
+                                )
+                                    continue;
+
+                                if(this.fieldMap[cell.y + y][cell.x + x].bomb)
+                                    cell.neighborhoodBombsCount++;
+
+                            }
+                            
+                        }
+
+                    }
+
+                }
+
+                /* Finaliza a configuração de novo jogo */
+
+                EventBus.$emit('newGame');
+
+                this.loading = false;
+
+            }, 10);
 
         }
 
@@ -248,6 +263,12 @@ export default {
 </script>
 
 <style lang="scss" module>
+
+.loading {
+
+    color: #fff;
+
+}
 
 .panel {
 

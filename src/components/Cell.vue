@@ -78,7 +78,7 @@ export default {
 
         mark() {
 
-            if(!this.data.revealed && this.flags > 0) {
+            if(!this.data.revealed && (this.marked || (!this.marked && this.flags > 0))) {
                 
                 this.marked = !this.marked;
 
