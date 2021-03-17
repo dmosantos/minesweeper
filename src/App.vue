@@ -3,7 +3,7 @@
 
         <h1 :class="$style.title">Campo Minado</h1>
         
-        <Board rows="20" cols="30" bombs="5" />
+        <Board rows="20" cols="30" bombs="80" />
 
         <footer :class="$style.footer">
             2021 | Desenvolvido por <a href="https://diegomarques.com.br/" title="Diego Marques" target="_blank">Diego Marques</a>
