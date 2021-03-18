@@ -1,2 +1,6 @@
 # minesweeper
-Campo Minado em VueJS
+
+Campo Minado desenvolvido em VueJS.
+
+## Preview:
+https://diegomarques.com.br/minesweeper/dist/
