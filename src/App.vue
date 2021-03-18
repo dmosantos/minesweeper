@@ -3,7 +3,7 @@
 
         <h1 :class="$style.title">Campo Minado</h1>
         
-        <Board />
+        <Board :class="$style.boardWrapper" />
 
         <footer :class="$style.footer">
             2021 | Desenvolvido por <a href="https://diegomarques.com.br/" title="Diego Marques" target="_blank">Diego Marques</a>
@@ -33,11 +33,12 @@ export default {
 .app {
 
     align-items: center;
-    display: flex;
+    
     flex-direction: column;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem 0;
+    text-align: center;
 
     .title {
 
@@ -46,6 +47,13 @@ export default {
         font-weight: 700;
         margin: 0 0 1rem 0;
         text-transform: uppercase;
+
+    }
+
+    .boardWrapper {
+        
+        display: inline-block;
+        text-align: left;
 
     }
 
