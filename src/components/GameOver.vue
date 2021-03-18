@@ -28,21 +28,6 @@ export default {
 
 <style lang="scss" module>
 
-.gameOver {
-
-    // align-items: center;
-    // background-color: rgba(0, 0, 0, .4);
-    // display: flex;
-    // justify-content: center;
-    // height: 100vh;
-    // left: 0;
-    // position: fixed;
-    // top: 0;
-    // width: 100vw;
-    // z-index: 100;
-
-}
-
 .modal {
 
     background-color: #fff;
@@ -53,14 +38,18 @@ export default {
 
     .title {
 
-        font-size: 2rem;
+        font-size: 1.2rem;
+        font-weight: 400;
         margin: 0 0 1rem 0;
+        text-transform: uppercase;
 
     }
 
     .message {
 
-        margin: 0 0 1rem 0;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 1.5rem 0;
 
     }
 
